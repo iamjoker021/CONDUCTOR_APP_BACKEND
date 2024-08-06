@@ -85,3 +85,56 @@ paths:
                   error:
                     type: string
                     example: Detailed error message
+
+  /api/bus-route/city/{city_id}/source-stop/{source_id}/destination:
+    get:
+      summary: Get all possible destinations from a source stop
+      description: Retrieve all possible destination stops from a given source stop for a specific city.
+      parameters:
+        - name: city_id
+          in: path
+          required: true
+          description: The ID of the city.
+          schema:
+            type: string
+        - name: source_id
+          in: path
+          required: true
+          description: The ID of the source stop.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of destination stops
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  destination_stop:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        route_id:
+                          type: string
+                          description: The ID of the bus route.
+                        stop_id:
+                          type: string
+                          description: The ID of the stop.
+                        stop_name:
+                          type: string
+                          description: The name of the stop.
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Unable to receive City List
+                  error:
+                    type: string
+                    example: [Error details here]
