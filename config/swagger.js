@@ -1,8 +1,10 @@
+const path = require('node:path');
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
 const options = {
     definition: {
+      openapi: '3.0.0',
       info: {
         title: "Conductor App",
         version: "0.0.0",
@@ -14,7 +16,7 @@ const options = {
         },
       ],
     },
-    apis: ["./router/*.js"],
+    apis: [path.join(__dirname, '../docs/*.yaml')],
 };
 
 const specs = swaggerJsdoc(options)
