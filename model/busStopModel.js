@@ -27,8 +27,28 @@ const getAllPossibleDestinationFromSource = async (sourceId) => {
     return rows;
 }
 
+const getBustListForChoosenPath = async (sourceId, destinationId) => {
+    const getBustListForChoosenPathQ = `
+    SELECT 
+        b.bus_id, 
+        b.price AS price_per_km, 
+        s1.distance_from_start - s2.distance_from_start as total_distance, 
+        (s1.distance_from_start - s2.distance_from_start) * b.price as fare
+    FROM bus_details.buses b
+    JOIN bus_details.busroutes r ON b.route_id = r.route_id
+    JOIN bus_details.busstops s1 ON r.route_id = s1.route_id
+    JOIN bus_details.busstops s2 ON r.route_id = s2.route_id
+    WHERE s1.stop_id = $1
+    AND s2.stop_id = $2
+    AND s1.stop_order < s2.stop_order;
+    `;
+    const { rows } = await pool.query(getBustListForChoosenPathQ, [sourceId, destinationId]);
+    return rows;
+}
+
 module.exports = {
     getAllCity,
     getAllStopsForCity,
-    getAllPossibleDestinationFromSource
+    getAllPossibleDestinationFromSource,
+    getBustListForChoosenPath
 }

@@ -39,8 +39,23 @@ const getAllPossibleDestinationFromSource = async (req, res) => {
     
 }
 
+const getBustListForChoosenPath = async (req, res) => {
+    try {
+        const sourceId = req.params.source_id;
+        const destinationId = req.params.destination_id;
+        const busList = await busStopModel.getBustListForChoosenPath(sourceId, destinationId);
+        res.json({
+            bus_list: busList
+        })
+    }
+    catch (err) {
+        res.status(500).json({'msg': 'Unable to receive City List', 'error': err});
+    }
+}
+
 module.exports = {
     getAllCity,
     getAllStopsForCity,
-    getAllPossibleDestinationFromSource
+    getAllPossibleDestinationFromSource,
+    getBustListForChoosenPath
 }

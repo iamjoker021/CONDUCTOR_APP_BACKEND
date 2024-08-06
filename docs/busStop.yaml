@@ -138,3 +138,68 @@ paths:
                   error:
                     type: string
                     example: [Error details here]
+
+  /api/bus-route/city/{city_id}/source-stop/{source_id}/destination/{destination_id}:
+    get:
+      summary: Retrieve bus IDs and fares for a chosen path
+      description: Get a list of bus IDs and fares between a given source stop and destination stop.
+      parameters:
+        - name: city_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the city.
+        - name: source_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the source stop.
+        - name: destination_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the destination stop.
+      responses:
+        '200':
+          description: A list of bus IDs and fares
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bus_list:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        bus_id:
+                          type: integer
+                          example: 1
+                        price_per_km:
+                          type: number
+                          format: decimal
+                          example: 2.50
+                        total_distance:
+                          type: number
+                          format: decimal
+                          example: 5.00
+                        fare:
+                          type: number
+                          format: decimal
+                          example: 12.50
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Unable to receive bus list
+                  error:
+                    type: string
+                    example: Detailed error message
