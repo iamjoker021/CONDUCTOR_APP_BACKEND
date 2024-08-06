@@ -12,6 +12,20 @@ const getAllCity = async (req, res) => {
     }
 }
 
+const getAllStopsForCity = async (req, res) => {
+    try {
+        const cityId = req.params.city_id;
+        const stopList = await busStopModel.getAllStopsForCity(cityId);
+        res.json({
+            source_stops: stopList
+        })
+    }
+    catch (err) {
+        res.status(500).json({'msg': 'Unable to receive City List', 'error': err});
+    }
+}
+
 module.exports = {
-    getAllCity
+    getAllCity,
+    getAllStopsForCity
 }
