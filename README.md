@@ -30,3 +30,14 @@ There are two part to this App
 1. *Conductor should be able to scan the QR and verify the ticket
 2. Conductor should be able to view no of tickets taken on online via the App on that particular trip
 
+User schema
+id
+name
+email
+phoneno
+passenger/conductor
+
+ticket schema
+ticketUniqueIdentifier
+ticketQR
+NoOfPassengers

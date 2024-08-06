@@ -139,7 +139,7 @@ paths:
                     type: string
                     example: [Error details here]
 
-  /api/bus-route/city/{city_id}/source-stop/{source_id}/destination/{destination_id}:
+  /api/bus-route/city/{city_id}/source-stop/{source_id}/destination/{destination_id}/bus:
     get:
       summary: Retrieve bus IDs and fares for a chosen path
       description: Get a list of bus IDs and fares between a given source stop and destination stop.
@@ -200,6 +200,101 @@ paths:
                   msg:
                     type: string
                     example: Unable to receive bus list
+                  error:
+                    type: string
+                    example: Detailed error message
+
+  /api/bus-route/city/{city_id}/source-stop/{source_id}/destination/{destination_id}/bus/{bus_id}:
+    get:
+      summary: Get fare details for a trip
+      description: Calculate and retrieve fare details for a trip between a source stop and a destination stop using a specified bus ID. Includes the total fare based on the number of passengers.
+      parameters:
+        - name: city_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the city.
+        - name: source_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the source stop.
+        - name: destination_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the destination stop.
+        - name: bus_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the bus.
+        - name: passengercount
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: The number of passengers.
+      responses:
+        '200':
+          description: Fare details for the trip
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Proceed to pay
+                  tripInfo:
+                    type: object
+                    properties:
+                      bus_id:
+                        type: integer
+                        example: 1
+                      price_per_km:
+                        type: number
+                        format: decimal
+                        example: 2.50
+                      total_distance:
+                        type: number
+                        format: decimal
+                        example: 5.00
+                      fare:
+                        type: number
+                        format: decimal
+                        example: 12.50
+                  noOfPassenger:
+                    type: integer
+                    example: 3
+                  totalFare:
+                    type: number
+                    format: decimal
+                    example: 37.50
+        '404':
+          description: Invalid trip details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Invalid Trip Details, not able to generate ticket
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Unable to Pay Trip
                   error:
                     type: string
                     example: Detailed error message
