@@ -21,7 +21,7 @@ const getAllStopsForCity = async (req, res) => {
         })
     }
     catch (err) {
-        res.status(500).json({'msg': 'Unable to receive City List', 'error': err});
+        res.status(500).json({'msg': 'Unable to receive Source Stop List', 'error': err});
     }
 }
 
@@ -34,7 +34,7 @@ const getAllPossibleDestinationFromSource = async (req, res) => {
         })
     }
     catch (err) {
-        res.status(500).json({'msg': 'Unable to receive City List', 'error': err});
+        res.status(500).json({'msg': 'Unable to receive Destination Stop List', 'error': err});
     }
     
 }
@@ -49,7 +49,7 @@ const getBustListForChoosenPath = async (req, res) => {
         })
     }
     catch (err) {
-        res.status(500).json({'msg': 'Unable to receive City List', 'error': err});
+        res.status(500).json({'msg': 'Unable to receive Bus List', 'error': err});
     }
 }
 
