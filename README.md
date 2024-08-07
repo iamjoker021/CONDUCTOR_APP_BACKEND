@@ -30,5 +30,10 @@ There are two part to this App
 1. *Conductor should be able to scan the QR and verify the ticket
 2. Conductor should be able to view no of tickets taken on online via the App on that particular trip
 
+Tasks done:
+1. Create BusStop API for user to serach bus and get fare for their trip
+2. Create User registration, login, view list of Ticket for a user
+
 Next Tasks:
-1. Create User registration, login, view list of Tickent for a user
+1. Get Ticket details
+2. validate jwt token code
