@@ -41,12 +41,13 @@ const validateUser = async (req, res) => {
 }
 
 const verifyToken = (req, res, next) => {
-    const token = req.header('Authorization');
-    if (!token) {
+    const bearerToken = req.header('Authorization');
+    if (!bearerToken) {
         return res.status(401).json({ error: 'Access denied' })
     };
     try {
         const AUTH_SECRET = process.env.AUTH_SECRET;
+        const token = bearerToken.split(' ')[1];
         const decoded = jwt.verify(token, AUTH_SECRET);
         req.userId = decoded.userId;
         next();
