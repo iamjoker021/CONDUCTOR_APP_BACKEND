@@ -7,7 +7,7 @@ const addUser = async (req, res) => {
     const { name, email, password, phoneno, role } = req.body;
     const user = await busStopModel.getUserDetailsByUsername(email);
     if (user.length !== 0) {
-        res.status(400).json({msg: 'Unable to register user', 'err': 'Given Username/Email already exits'});
+        return res.status(400).json({msg: 'Unable to register user', 'err': 'Given Username/Email already exits'});
     }
     try {
         const PASS_SALT = parseInt(process.env.PASS_SALT) || 10;
