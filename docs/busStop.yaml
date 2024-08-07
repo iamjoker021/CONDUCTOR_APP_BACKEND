@@ -1,95 +1,11 @@
 openapi: 3.0.0
 info:
   version: 1.0.0
-  title: Bus Stop API
-  description: API documentation for bus stop functionalities
+  title: Bus Route API
+  description: API documentation for bus route functionalities
 
 servers:
   - url: http://localhost:3000/api
-
-paths:
-  /api/bus-route/city:
-    get:
-      summary: Get all cities
-      tags:
-        - Bus Stop
-      responses:
-        '200':
-          description: Successful response
-        '500':
-          description: Server error
-
-  /api/bus-route/city/{city_id}/source-stop:
-    get:
-      summary: Get all stops for a city
-      tags:
-        - Bus Stop
-      parameters:
-        - in: path
-          name: city_id
-          schema:
-            type: integer
-          required: true
-          description: City ID
-      responses:
-        '200':
-          description: Successful response
-        '500':
-          description: Server error
-
-  /api/bus-route/city/{city_id}/source-stop/{source_id}/destination:
-    get:
-      summary: Get all possible destinations from a source stop
-      tags:
-        - Bus Stop
-      parameters:
-        - in: path
-          name: city_id
-          schema:
-            type: integer
-          required: true
-          description: City ID
-        - in: path
-          name: source_id
-          schema:
-            type: integer
-          required: true
-          description: Source Stop ID
-      responses:
-        '200':
-          description: Successful response
-        '500':
-          description: Server error
-
-  /api/bus-route/city/{city_id}/source-stop/{source_id}/destination/{destination_id}/bus:
-    get:
-      summary: Get bus list for chosen path
-      tags:
-        - Bus Stop
-      parameters:
-        - in: path
-          name: city_id
-          schema:
-            type: integer
-          required: true
-          description: City ID
-        - in: path
-          name: source_id
-          schema:
-            type: integer
-          required: true
-          description: Source Stop ID
-        - in: path
-          name: destination_id
-          schema:
-            type: integer
-          required: true
-          description: Destination Stop ID
-      responses:
-        '200':
-          description: Successful response
-        '500':
-          description: Server error
 
 components:
   schemas:
@@ -120,3 +36,123 @@ components:
           type: number
         fare:
           type: number
+
+paths:
+  /bus-route/city:
+    get:
+      summary: Get all cities
+      tags:
+        - Bus Route
+      responses:
+        '200':
+          description: Successful response with city list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  city_list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/City'
+        '500':
+          description: Server error
+
+  /bus-route/city/{city_id}/source-stop:
+    get:
+      summary: Get all stops for a city
+      tags:
+        - Bus Route
+      parameters:
+        - in: path
+          name: city_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the city
+      responses:
+        '200':
+          description: Successful response with stop list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  source_stops:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Stop'
+        '500':
+          description: Server error
+
+  /bus-route/city/{city_id}/source-stop/{source_id}/destination:
+    get:
+      summary: Get all possible destinations from a source stop
+      tags:
+        - Bus Route
+      parameters:
+        - in: path
+          name: city_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the city
+        - in: path
+          name: source_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the source stop
+      responses:
+        '200':
+          description: Successful response with destination stop list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  destination_stop:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Stop'
+        '500':
+          description: Server error
+
+  /bus-route/city/{city_id}/source-stop/{source_id}/destination/{destination_id}/bus:
+    get:
+      summary: Get bus list for chosen path
+      tags:
+        - Bus Route
+      parameters:
+        - in: path
+          name: city_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the city
+        - in: path
+          name: source_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the source stop
+        - in: path
+          name: destination_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the destination stop
+      responses:
+        '200':
+          description: Successful response with bus list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bus_list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Bus'
+        '500':
+          description: Server error

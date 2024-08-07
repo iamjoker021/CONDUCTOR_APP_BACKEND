@@ -34,6 +34,7 @@ Tasks done:
 1. Create BusStop API for user to serach bus and get fare for their trip
 2. Create User registration, login, view list of Ticket for a user
 3. Get ticket details when passed with valid jwt token
+4. On request to pay, add ticket details
 
 Next Tasks:
-1. On request to pay, add ticket details
+1. Build frontend

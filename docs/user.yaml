@@ -53,7 +53,7 @@ components:
           type: integer
 
 paths:
-  /api/user/tickets:
+  /user/tickets:
     get:
       summary: Get ticket details for a user
       tags:
@@ -84,7 +84,7 @@ paths:
         '500':
           description: Server error
 
-  /api/user/pay-for-trip:
+  /user/pay-for-trip:
     post:
       summary: Pay for a Trip
       tags:

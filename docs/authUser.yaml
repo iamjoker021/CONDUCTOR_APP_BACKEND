@@ -1,70 +1,11 @@
 openapi: 3.0.0
 info:
   version: 1.0.0
-  title: Authentication API
-  description: API documentation for user authentication
+  title: Auth API
+  description: API documentation for authentication functionalities
 
 servers:
   - url: http://localhost:3000/api
-
-paths:
-  /api/auth/register:
-    post:
-      summary: Register a new user
-      tags:
-        - Authentication
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                email:
-                  type: string
-                password:
-                  type: string
-                confirm_password:
-                  type: string
-                phoneno:
-                  type: string
-                role:
-                  type: string
-      responses:
-        '200':
-          description: User registered successfully
-        '400':
-          description: User already exists
-        '422':
-          description: Validation error
-        '500':
-          description: Server error
-
-  /api/auth/login:
-    post:
-      summary: Login a user
-      tags:
-        - Authentication
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                password:
-                  type: string
-      responses:
-        '200':
-          description: User logged in successfully
-        '401':
-          description: Authentication failed
-        '500':
-          description: Server error
 
 components:
   schemas:
@@ -77,44 +18,124 @@ components:
           type: string
         email:
           type: string
-        password_hash:
-          type: string
         phoneno:
           type: string
         role:
           type: string
 
-    Ticket:
-      type: object
-      properties:
-        ticket_unique_identifier:
-          type: string
-        ticket_qr:
-          type: string
-        issue_time:
-          type: string
-          format: date-time
-        expiry_time:
-          type: string
-          format: date-time
-        trip_details:
-          type: object
-          properties:
-            bus_id:
-              type: integer
-            source_stop_id:
-              type: integer
-            destination_stop_id:
-              type: integer
-            total_distance:
-              type: number
-            price_per_km:
-              type: number
-            no_of_passengers:
-              type: integer
-            fare:
-              type: number
-        is_valid:
-          type: boolean
-        user_id:
-          type: integer
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: John Doe
+                email:
+                  type: string
+                  example: john.doe@example.com
+                password:
+                  type: string
+                  example: Password123
+                confirm_password:
+                  type: string
+                  example: Password123
+                phoneno:
+                  type: string
+                  example: 1234567890
+                role:
+                  type: string
+                  example: passenger
+      responses:
+        '201':
+          description: User registered successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: User registered successfully
+        '400':
+          description: Validation error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Validation error
+                  errors:
+                    type: array
+                    items:
+                      type: string
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Internal server error
+
+  /auth/login:
+    post:
+      summary: User login
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: john.doe@example.com
+                password:
+                  type: string
+                  example: Password123
+      responses:
+        '200':
+          description: Login successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: your-jwt-token
+        '401':
+          description: Unauthorized, invalid credentials.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Invalid email or password
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Internal server error
