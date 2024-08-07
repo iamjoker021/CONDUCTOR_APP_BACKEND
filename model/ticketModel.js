@@ -24,6 +24,19 @@ const getTicketDetailsForUser = async (userId, isValid) => {
     return rows;
 }
 
+const createTicketForUser = async (userId, tripDetails) => {
+    const createTicketForUserQ = `
+    INSERT INTO user_ticket.tickets (ticket_qr, issue_time, expiry_time, trip_details, is_valid, user_id)
+    VALUES ($1, $2, $3, $4, $5, $6)
+    `
+    const ticket_qr = 'fill QR here';
+    const currentTime = new Date();
+    const expiryTime = new Date(currentTime.getTime() + ( 1 * 60 * 60 * 1000));
+    const isValid = true;
+    await pool.query(createTicketForUserQ, [ticket_qr, currentTime, expiryTime, tripDetails, isValid, userId]);
+}
+
 module.exports = {
-    getTicketDetailsForUser
+    getTicketDetailsForUser,
+    createTicketForUser
 }

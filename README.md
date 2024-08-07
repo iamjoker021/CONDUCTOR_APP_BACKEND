@@ -33,7 +33,7 @@ There are two part to this App
 Tasks done:
 1. Create BusStop API for user to serach bus and get fare for their trip
 2. Create User registration, login, view list of Ticket for a user
+3. Get ticket details when passed with valid jwt token
 
 Next Tasks:
-1. Get Ticket details
-2. validate jwt token code
+1. On request to pay, add ticket details
