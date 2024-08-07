@@ -19,10 +19,11 @@ const payForTrip = async (req, res) => {
     try {
         const userId = req.userId;
         const { sourceId, destinationId, busId, noOfPassengers } = req.body;
-        const fareInfo = await busStopModel.validateTripDetails(sourceId, destinationId, busId);
+        const fareInfoList = await busStopModel.validateTripDetails(sourceId, destinationId, busId);
 
-        if (fareInfo.length === 1) {
-            const totalFare = noOfPassengers * parseInt(fareInfo[0].fare);
+        if (fareInfoList.length === 1) {
+            const fareInfo = fareInfoList[0]
+            const totalFare = noOfPassengers * parseInt(fareInfo.fare);
             const tripDetails = {
                 bus_id: fareInfo.bus_id,
                 source_stop_id: sourceId,
@@ -32,7 +33,7 @@ const payForTrip = async (req, res) => {
                 no_of_passengers: noOfPassengers,
                 fare: totalFare
             }
-            await ticketModel.createTicketForUser(userId, tripDetails);
+            // await ticketModel.createTicketForUser(userId, tripDetails);
             res.json({
                 'msg': 'Ticket placed',
                 tripDetails
