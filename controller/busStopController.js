@@ -53,37 +53,9 @@ const getBustListForChoosenPath = async (req, res) => {
     }
 }
 
-const payForTrip = async (req, res) => {
-    try {
-        const sourceId = req.params.source_id;
-        const destinationId = req.params.destination_id;
-        const busId = req.params.bus_id;
-        const noOfPassengers = parseInt(req.query.passengercount);
-        const fareInfo = await busStopModel.validateTripDetails(sourceId, destinationId, busId);
-        
-        if (fareInfo.length === 1) {
-            const totalFare = noOfPassengers * parseInt(fareInfo[0].fare);
-            res.json({
-                'msg': 'Proceed to pay',
-                'tripInfo': fareInfo[0],
-                'noOfPassenger': noOfPassengers,
-                'totalFare': totalFare
-            })
-        }
-        else {
-            res.status(404).json({ 'msg': 'Invalid Trip Details, not able to generate ticket' })
-        }
-        
-    }
-    catch (err) {
-        res.status(500).json({'msg': 'Unable to Pay Trip', 'error': err});
-    }
-}
-
 module.exports = {
     getAllCity,
     getAllStopsForCity,
     getAllPossibleDestinationFromSource,
-    getBustListForChoosenPath,
-    payForTrip
+    getBustListForChoosenPath
 }
