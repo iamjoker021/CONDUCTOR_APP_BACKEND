@@ -83,3 +83,89 @@ paths:
           description: Unauthorized, JWT token missing or invalid
         '500':
           description: Server error
+
+  /api/user/pay-for-trip:
+    post:
+      summary: Pay for a Trip
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sourceId:
+                  type: integer
+                  description: ID of the source stop.
+                  example: 1
+                destinationId:
+                  type: integer
+                  description: ID of the destination stop.
+                  example: 2
+                busId:
+                  type: integer
+                  description: ID of the bus.
+                  example: 3
+                noOfPassengers:
+                  type: integer
+                  description: Number of passengers.
+                  example: 4
+      responses:
+        '200':
+          description: Fare calculation successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Proceed to pay
+                  tripInfo:
+                    type: object
+                    properties:
+                      bus_id:
+                        type: integer
+                        example: 3
+                      price_per_km:
+                        type: integer
+                        example: 10
+                      total_distance:
+                        type: integer
+                        example: 15
+                      fare:
+                        type: integer
+                        example: 150
+                  noOfPassenger:
+                    type: integer
+                    example: 4
+                  totalFare:
+                    type: integer
+                    example: 600
+        '404':
+          description: Invalid trip details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Invalid Trip Details, not able to generate ticket
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Unable to Pay Trip
+                  error:
+                    type: string
+                    example: Internal Server Error
