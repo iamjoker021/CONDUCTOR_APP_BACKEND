@@ -2,11 +2,12 @@ require('dotenv').config();
 const busStopModel = require("../model/userModel");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { use } = require('../router/busStopRouter');
 
 const addUser = async (req, res) => {
     const { name, email, password, phoneno, role } = req.body;
-    const user = await busStopModel.getUserDetailsByUsername(email);
-    if (user.length !== 0) {
+    const userList = await busStopModel.getUserDetailsByUsername(email);
+    if (userList.length !== 0) {
         return res.status(400).json({msg: 'Unable to register user', 'err': 'Given Username/Email already exits'});
     }
     try {
