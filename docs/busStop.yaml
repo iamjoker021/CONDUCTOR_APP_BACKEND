@@ -1,300 +1,166 @@
 openapi: 3.0.0
 info:
-  title: Conductor App
-  version: 0.0.0
-  description: This is the backend API for the Conductor App
+  version: 1.0.0
+  title: Bus Stop API
+  description: API documentation for bus stop functionalities
+
+servers:
+  - url: http://localhost:3000/api
 
 paths:
   /api/bus-route/city:
     get:
-      summary: Retrieve a list of cities
-      description: Retrieve a list of all cities where bus stops are available.
+      summary: Get all cities
+      tags:
+        - Bus Stop
       responses:
         '200':
-          description: A list of cities
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  city_list:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          example: 1
-                        name:
-                          type: string
-                          example: New York
+          description: Successful response
         '500':
-          description: Unable to receive City List
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  msg:
-                    type: string
-                    example: Unable to receive City List
-                  error:
-                    type: string
-                    example: error details
+          description: Server error
 
   /api/bus-route/city/{city_id}/source-stop:
     get:
-      summary: Retrieve all bus stops for a city
-      description: Get a list of all bus stops for a given city.
+      summary: Get all stops for a city
+      tags:
+        - Bus Stop
       parameters:
-        - name: city_id
-          in: path
-          required: true
+        - in: path
+          name: city_id
           schema:
             type: integer
-          description: The ID of the city for which to retrieve bus stops.
+          required: true
+          description: City ID
       responses:
         '200':
-          description: A list of bus stops in the specified city
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  source_stops:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        stop_id:
-                          type: integer
-                          example: 1
-                        stop_name:
-                          type: string
-                          example: Times Square
+          description: Successful response
         '500':
-          description: Unable to retrieve the list of bus stops
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  msg:
-                    type: string
-                    example: Unable to receive City List
-                  error:
-                    type: string
-                    example: Detailed error message
+          description: Server error
 
   /api/bus-route/city/{city_id}/source-stop/{source_id}/destination:
     get:
       summary: Get all possible destinations from a source stop
-      description: Retrieve all possible destination stops from a given source stop for a specific city.
+      tags:
+        - Bus Stop
       parameters:
-        - name: city_id
-          in: path
-          required: true
-          description: The ID of the city.
+        - in: path
+          name: city_id
           schema:
-            type: string
-        - name: source_id
-          in: path
+            type: integer
           required: true
-          description: The ID of the source stop.
+          description: City ID
+        - in: path
+          name: source_id
           schema:
-            type: string
+            type: integer
+          required: true
+          description: Source Stop ID
       responses:
         '200':
-          description: A list of destination stops
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  destination_stop:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        route_id:
-                          type: string
-                          description: The ID of the bus route.
-                        stop_id:
-                          type: string
-                          description: The ID of the stop.
-                        stop_name:
-                          type: string
-                          description: The name of the stop.
+          description: Successful response
         '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  msg:
-                    type: string
-                    example: Unable to receive City List
-                  error:
-                    type: string
-                    example: [Error details here]
+          description: Server error
 
   /api/bus-route/city/{city_id}/source-stop/{source_id}/destination/{destination_id}/bus:
     get:
-      summary: Retrieve bus IDs and fares for a chosen path
-      description: Get a list of bus IDs and fares between a given source stop and destination stop.
+      summary: Get bus list for chosen path
+      tags:
+        - Bus Stop
       parameters:
-        - name: city_id
-          in: path
-          required: true
+        - in: path
+          name: city_id
           schema:
             type: integer
-          description: The ID of the city.
-        - name: source_id
-          in: path
           required: true
+          description: City ID
+        - in: path
+          name: source_id
           schema:
             type: integer
-          description: The ID of the source stop.
-        - name: destination_id
-          in: path
           required: true
+          description: Source Stop ID
+        - in: path
+          name: destination_id
           schema:
             type: integer
-          description: The ID of the destination stop.
+          required: true
+          description: Destination Stop ID
       responses:
         '200':
-          description: A list of bus IDs and fares
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  bus_list:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        bus_id:
-                          type: integer
-                          example: 1
-                        price_per_km:
-                          type: number
-                          format: decimal
-                          example: 2.50
-                        total_distance:
-                          type: number
-                          format: decimal
-                          example: 5.00
-                        fare:
-                          type: number
-                          format: decimal
-                          example: 12.50
+          description: Successful response
         '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  msg:
-                    type: string
-                    example: Unable to receive bus list
-                  error:
-                    type: string
-                    example: Detailed error message
+          description: Server error
 
   /api/bus-route/city/{city_id}/source-stop/{source_id}/destination/{destination_id}/bus/{bus_id}:
     get:
-      summary: Get fare details for a trip
-      description: Calculate and retrieve fare details for a trip between a source stop and a destination stop using a specified bus ID. Includes the total fare based on the number of passengers.
+      summary: Get fare details and validate trip
+      tags:
+        - Bus Stop
       parameters:
-        - name: city_id
-          in: path
-          required: true
+        - in: path
+          name: city_id
           schema:
             type: integer
-          description: The ID of the city.
-        - name: source_id
-          in: path
           required: true
+          description: City ID
+        - in: path
+          name: source_id
           schema:
             type: integer
-          description: The ID of the source stop.
-        - name: destination_id
-          in: path
           required: true
+          description: Source Stop ID
+        - in: path
+          name: destination_id
           schema:
             type: integer
-          description: The ID of the destination stop.
-        - name: bus_id
-          in: path
           required: true
+          description: Destination Stop ID
+        - in: path
+          name: bus_id
           schema:
             type: integer
-          description: The ID of the bus.
-        - name: passengercount
-          in: query
           required: true
+          description: Bus ID
+        - in: query
+          name: passengercount
           schema:
             type: integer
-          description: The number of passengers.
+          required: true
+          description: Number of passengers
       responses:
         '200':
-          description: Fare details for the trip
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  msg:
-                    type: string
-                    example: Proceed to pay
-                  tripInfo:
-                    type: object
-                    properties:
-                      bus_id:
-                        type: integer
-                        example: 1
-                      price_per_km:
-                        type: number
-                        format: decimal
-                        example: 2.50
-                      total_distance:
-                        type: number
-                        format: decimal
-                        example: 5.00
-                      fare:
-                        type: number
-                        format: decimal
-                        example: 12.50
-                  noOfPassenger:
-                    type: integer
-                    example: 3
-                  totalFare:
-                    type: number
-                    format: decimal
-                    example: 37.50
+          description: Successful response with fare details
         '404':
           description: Invalid trip details
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  msg:
-                    type: string
-                    example: Invalid Trip Details, not able to generate ticket
         '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  msg:
-                    type: string
-                    example: Unable to Pay Trip
-                  error:
-                    type: string
-                    example: Detailed error message
+          description: Server error
+
+components:
+  schemas:
+    City:
+      type: object
+      properties:
+        city_id:
+          type: integer
+        city_name:
+          type: string
+
+    Stop:
+      type: object
+      properties:
+        stop_id:
+          type: integer
+        stop_name:
+          type: string
+
+    Bus:
+      type: object
+      properties:
+        bus_id:
+          type: integer
+        price_per_km:
+          type: number
+        total_distance:
+          type: number
+        fare:
+          type: number
