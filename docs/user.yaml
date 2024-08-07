@@ -1,0 +1,85 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: User API
+  description: API documentation for user functionalities
+
+servers:
+  - url: http://localhost:3000/api
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Ticket:
+      type: object
+      properties:
+        ticket_id:
+          type: integer
+        ticket_unique_identifier:
+          type: string
+        ticket_qr:
+          type: string
+        issue_time:
+          type: string
+          format: date-time
+        expiry_time:
+          type: string
+          format: date-time
+        trip_details:
+          type: object
+          properties:
+            bus_id:
+              type: integer
+            source_stop_id:
+              type: integer
+            destination_stop_id:
+              type: integer
+            total_distance:
+              type: number
+            price_per_km:
+              type: number
+            no_of_passengers:
+              type: integer
+            fare:
+              type: number
+        is_valid:
+          type: boolean
+        user_id:
+          type: integer
+
+paths:
+  /api/user/tickets:
+    get:
+      summary: Get ticket details for a user
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: isvalid
+          schema:
+            type: integer
+          required: false
+          description: Whether to fetch only valid tickets (1 for true, 0 for false)
+      responses:
+        '200':
+          description: Successful response with ticket details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ticketList:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Ticket'
+        '401':
+          description: Unauthorized, JWT token missing or invalid
+        '500':
+          description: Server error
