@@ -1,7 +1,7 @@
 const express = require('express');
 const swagger = require('./config/swagger');
 const busStopRouter = require('./router/busStopRouter');
-const { authRouter } = require('./router/authRouter');
+const { authRouter, verifyToken } = require('./router/authRouter');
 
 const app = express();
 app.use(express.json());

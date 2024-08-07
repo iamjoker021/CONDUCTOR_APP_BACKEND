@@ -8,5 +8,6 @@ authRouter.post('/register', registerValidation, validate, authController.addUse
 authRouter.post('/login', loginValidation, validate, authController.validateUser);
 
 module.exports = {
-    authRouter
+    authRouter,
+    verifyToken: authController.verifyToken
 };
