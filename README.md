@@ -29,3 +29,6 @@ There are two part to this App
 ### Conductor View:
 1. *Conductor should be able to scan the QR and verify the ticket
 2. Conductor should be able to view no of tickets taken on online via the App on that particular trip
+
+Next Tasks:
+1. Create User registration, login, view list of Tickent for a user
