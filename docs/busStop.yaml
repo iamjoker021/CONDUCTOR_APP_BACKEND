@@ -91,50 +91,6 @@ paths:
         '500':
           description: Server error
 
-  /api/bus-route/city/{city_id}/source-stop/{source_id}/destination/{destination_id}/bus/{bus_id}:
-    get:
-      summary: Get fare details and validate trip
-      tags:
-        - Bus Stop
-      parameters:
-        - in: path
-          name: city_id
-          schema:
-            type: integer
-          required: true
-          description: City ID
-        - in: path
-          name: source_id
-          schema:
-            type: integer
-          required: true
-          description: Source Stop ID
-        - in: path
-          name: destination_id
-          schema:
-            type: integer
-          required: true
-          description: Destination Stop ID
-        - in: path
-          name: bus_id
-          schema:
-            type: integer
-          required: true
-          description: Bus ID
-        - in: query
-          name: passengercount
-          schema:
-            type: integer
-          required: true
-          description: Number of passengers
-      responses:
-        '200':
-          description: Successful response with fare details
-        '404':
-          description: Invalid trip details
-        '500':
-          description: Server error
-
 components:
   schemas:
     City:
