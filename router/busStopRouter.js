@@ -8,4 +8,6 @@ busStopRouter.get('/city/:city_id/source-stop', busStopController.getAllStopsFor
 busStopRouter.get('/city/:city_id/source-stop/:source_id/destination', busStopController.getAllPossibleDestinationFromSource)
 busStopRouter.get('/city/:city_id/source-stop/:source_id/destination/:destination_id/bus', busStopController.getBustListForChoosenPath)
 
+busStopRouter.get('/bus/:bus_id', busStopController.getStopsFromBusId);
+
 module.exports = busStopRouter;

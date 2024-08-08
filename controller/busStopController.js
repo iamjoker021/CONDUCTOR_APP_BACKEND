@@ -53,9 +53,23 @@ const getBustListForChoosenPath = async (req, res) => {
     }
 }
 
+const getStopsFromBusId = async (req, res) => {
+    try {
+        const busId = req.params.bus_id;
+        const busStopsDetails = await busStopModel.getStopsFromBusId(busId);
+        res.json({
+            busStopsDetails
+        })
+    } 
+    catch (err) {
+        res.status(500).json({'msg': 'Unable to receive Bus Stop info', 'error': err});
+    }
+}
+
 module.exports = {
     getAllCity,
     getAllStopsForCity,
     getAllPossibleDestinationFromSource,
-    getBustListForChoosenPath
+    getBustListForChoosenPath,
+    getStopsFromBusId
 }

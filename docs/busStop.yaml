@@ -156,3 +156,64 @@ paths:
                       $ref: '#/components/schemas/Bus'
         '500':
           description: Server error
+
+  /bus-route/bus/{bus_id}:
+    get:
+      summary: Get stops from a bus ID
+      tags:
+        - Bus Route
+      parameters:
+        - in: path
+          name: bus_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the bus
+          example: 1
+      responses:
+        '200':
+          description: Successful response with bus stop details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  busStopsDetails:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        bus_id:
+                          type: integer
+                          example: 1
+                        route_id:
+                          type: integer
+                          example: 101
+                        stop_id:
+                          type: integer
+                          example: 1001
+                        stop_name:
+                          type: string
+                          example: "Main Street"
+                        stop_order:
+                          type: integer
+                          example: 1
+                        distance_from_start:
+                          type: number
+                          example: 0.0
+                        price:
+                          type: number
+                          example: 10.0
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Unable to receive Bus Stop info
+                  error:
+                    type: string
+                    example: Internal Server Error

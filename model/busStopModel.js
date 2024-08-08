@@ -46,6 +46,18 @@ const getBustListForChoosenPath = async (sourceId, destinationId) => {
     return rows;
 }
 
+const getStopsFromBusId = async (busId) => {
+    const getStopsFromBusIdQ = `
+    SELECT b.bus_id, r.route_id, s.stop_id, s.stop_name, s.stop_order, s.distance_from_start, b.price
+    FROM bus_details.buses b
+    JOIN bus_details.busroutes r ON r.route_id = b.route_id
+    JOIN bus_details.busstops s ON s.route_id = s.route_id
+    WHERE b.bus_id = $1
+    `;
+    const { rows } = await pool.query(getStopsFromBusIdQ, [busId]);
+    return rows;
+}
+
 const validateTripDetails = async (sourceId, destinationId, busId) => {
     const validateTripDetailsQ = `
     SELECT 
@@ -69,5 +81,6 @@ module.exports = {
     getAllStopsForCity,
     getAllPossibleDestinationFromSource,
     getBustListForChoosenPath,
+    getStopsFromBusId,
     validateTripDetails
 }
