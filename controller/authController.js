@@ -8,7 +8,7 @@ const addUser = async (req, res) => {
     const { name, email, password, phoneno, role } = req.body;
     const userList = await busStopModel.getUserDetailsByUsername(email);
     if (userList.length !== 0) {
-        return res.status(400).json({msg: 'Unable to register user', 'err': 'Given Username/Email already exits'});
+        return res.status(400).json({msg: 'Unable to register user', error: 'Given Username/Email already exits'});
     }
     try {
         const PASS_SALT = parseInt(process.env.PASS_SALT) || 10;
@@ -19,7 +19,7 @@ const addUser = async (req, res) => {
         });
     }
     catch (err) {
-        res.status(500).json({'msg': 'Unable to register user', 'err': err});
+        res.status(500).json({msg: 'Unable to register user', error: err});
     }
 }
 
@@ -27,7 +27,7 @@ const validateUser = async (req, res) => {
     const { email, password } = req.body;
     const userList = await busStopModel.getUserDetailsByUsername(email);
     if (userList.length !== 1) {
-        res.status(401).json({ error: 'Authentication failed', 'msg': 'Either username is invalid/User is not registered yet' });
+        res.status(401).json({ error: 'Authentication failed', msg: 'Either username is invalid/User is not registered yet' });
     }
     const user = userList[0];
     const isPasswordCorrect = await bcrypt.compare(password, user.password_hash);
@@ -36,10 +36,10 @@ const validateUser = async (req, res) => {
 
         const tokenExpireDuration = parseInt(process.env.TOKEN_EXPIRY_DURATION || (5 * 60))
         const token = jwt.sign({ userId: user.id }, AUTH_SECRET, { expiresIn: tokenExpireDuration, });
-        res.json({ token });
+        res.json({ token, username: user.email });
     }
     else {
-        res.status(401).json({ error: 'Authentication failed', 'msg': 'Password is incorrect' });
+        res.status(401).json({ error: 'Authentication failed', msg: 'Password is incorrect' });
     }
 }
 

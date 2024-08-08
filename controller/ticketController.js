@@ -11,7 +11,7 @@ const getTicketDetailsForUser = async (req, res) => {
         })
     }
     catch (err) {
-        res.status(500).json({'msg': 'Unable to fetch ticket details', 'error': err});
+        res.status(500).json({msg: 'Unable to fetch ticket details', error: err});
     }
 }
 
@@ -33,19 +33,18 @@ const payForTrip = async (req, res) => {
                 no_of_passengers: noOfPassengers,
                 fare: totalFare
             }
-            // await ticketModel.createTicketForUser(userId, tripDetails);
+            await ticketModel.createTicketForUser(userId, tripDetails);
             res.json({
                 'msg': 'Ticket placed',
                 tripDetails
             })
         }
         else {
-            res.status(404).json({ 'msg': 'Invalid Trip Details, not able to generate ticket' })
+            res.status(404).json({ msg: 'Invalid Trip Details, not able to generate ticket', error: 'Exprected exactly entry for BusID, sourceId, destinationId' })
         }
     }
     catch (err) {
-        throw err;
-        res.status(500).json({'msg': 'Unable to Pay Trip', 'error': err});
+        res.status(500).json({msg: 'Unable to Pay Trip', error: err});
     }
 }
 
