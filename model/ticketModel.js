@@ -1,3 +1,4 @@
+require('dotenv').config();
 const pool = require("../config/db");
 
 const getTicketDetailsForUser = async (userId, isValid) => {
@@ -30,7 +31,8 @@ const createTicketForUser = async (userId, tripDetails) => {
     `
     const ticket_qr = 'fill QR here';
     const currentTime = new Date();
-    const expiryTime = new Date(currentTime.getTime() + ( 1 * 60 * 60 * 1000));
+    const ticketExpireDuration = parseInt(process.env.TICKET_EXPIRY_DURATION || (1 * 60 * 60 * 1000));
+    const expiryTime = new Date(currentTime.getTime() + ticketExpireDuration);
     await pool.query(createTicketForUserQ, [ticket_qr, currentTime, expiryTime, tripDetails, userId]);
 }
 

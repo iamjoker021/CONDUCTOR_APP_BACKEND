@@ -33,7 +33,9 @@ const validateUser = async (req, res) => {
     const isPasswordCorrect = await bcrypt.compare(password, user.password_hash);
     if (isPasswordCorrect) {
         const AUTH_SECRET = process.env.AUTH_SECRET;
-        const token = jwt.sign({ userId: user.id }, AUTH_SECRET, { expiresIn: '1h', });
+
+        const tokenExpireDuration = parseInt(process.env.TOKEN_EXPIRY_DURATION || (5 * 60))
+        const token = jwt.sign({ userId: user.id }, AUTH_SECRET, { expiresIn: tokenExpireDuration, });
         res.json({ token });
     }
     else {
