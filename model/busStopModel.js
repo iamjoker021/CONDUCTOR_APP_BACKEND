@@ -54,7 +54,7 @@ const getStopsFromBusId = async (busId) => {
 		'stop_name', s.stop_name, 
 		'stop_order', s.stop_order, 
 		'distance_from_start', s.distance_from_start
-	))
+	)) AS stop_details
     FROM bus_details.buses b
     JOIN bus_details.busroutes r ON r.route_id = b.route_id
     JOIN bus_details.busstops s ON s.route_id = s.route_id
