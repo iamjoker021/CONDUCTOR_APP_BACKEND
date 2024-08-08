@@ -48,11 +48,18 @@ const getBustListForChoosenPath = async (sourceId, destinationId) => {
 
 const getStopsFromBusId = async (busId) => {
     const getStopsFromBusIdQ = `
-    SELECT b.bus_id, r.route_id, s.stop_id, s.stop_name, s.stop_order, s.distance_from_start, b.price
+    SELECT b.bus_id, r.route_id, b.price,
+	jsonb_agg(jsonb_build_object(
+		'stop_id', s.stop_id, 
+		'stop_name', s.stop_name, 
+		'stop_order', s.stop_order, 
+		'distance_from_start', s.distance_from_start
+	))
     FROM bus_details.buses b
     JOIN bus_details.busroutes r ON r.route_id = b.route_id
     JOIN bus_details.busstops s ON s.route_id = s.route_id
     WHERE b.bus_id = $1
+    GROUP BY 1, 2, 3
     `;
     const { rows } = await pool.query(getStopsFromBusIdQ, [busId]);
     return rows;
