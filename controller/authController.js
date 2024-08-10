@@ -26,8 +26,9 @@ const addUser = async (req, res) => {
 const validateUser = async (req, res) => {
     const { email, password } = req.body;
     const userList = await busStopModel.getUserDetailsByUsername(email);
+    console.log(userList)
     if (userList.length !== 1) {
-        res.status(401).json({ error: 'Authentication failed', msg: 'Either username is invalid/User is not registered yet' });
+        return res.status(401).json({ error: 'Authentication failed', msg: 'Either username is invalid/User is not registered yet' });
     }
     const user = userList[0];
     const isPasswordCorrect = await bcrypt.compare(password, user.password_hash);
