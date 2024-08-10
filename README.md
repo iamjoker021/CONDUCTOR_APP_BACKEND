@@ -37,4 +37,15 @@ Tasks done:
 4. On request to pay, add ticket details
 
 Next Tasks:
-1. Build frontend
+1. Learn how QR works
+2. Chekck how other ticket verification works
+3. Integrate ticket verification and QR process in app
+4. Build Conductor side of application
+5. Add other features like user level features, ticket level features, make it standard error sending and makeit production ready
+6. Learn about PWA, and how to impletement the app usign PWA on mobile app
+7. How to host the webpage from your conputer to try and check
+8. How to enable payement transaction
+
+## How to validate the ticket?
+1. The ticket should be present in our DB and should be in active state
+2. The ticket should match the Source-Destination-Names should be valid.
