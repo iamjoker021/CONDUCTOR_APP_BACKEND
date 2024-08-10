@@ -1,20 +1,32 @@
-const pool = require("../config/db");
+const { db } = require("../config/db_sqlite/db");
 
 const addUser = async (name, email, password_hash, phoneno, role) => {
     const addUserQ = `
-    INSERT INTO 
-    user_ticket.users (name, email, password_hash, phoneno, role)
-    VALUES ($1, $2, $3, $4, $5)
+    INSERT INTO users (name, email, password_hash, phoneno, role)
+    VALUES (?, ?, ?, ?, ?)
     `;
-    await pool.query(addUserQ, [name, email, password_hash, phoneno, role])
-}
+    return new Promise((resolve, reject) => {
+        db.run(addUserQ, [name, email, password_hash, phoneno, role], function(err) {
+            if (err) {
+                return reject(err);
+            }
+            resolve({ lastID: this.lastID });
+        });
+    });
+};
 
 const getUserDetailsByUsername = async (email) => {
-    const { rows } = await pool.query('SELECT * FROM user_ticket.users WHERE email = $1', [email])
-    return rows;
-}
+    return new Promise((resolve, reject) => {
+        db.all('SELECT * FROM users WHERE email = ?', [email], (err, row) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(row);
+        });
+    });
+};
 
 module.exports = {
     addUser,
     getUserDetailsByUsername
-}
+};
