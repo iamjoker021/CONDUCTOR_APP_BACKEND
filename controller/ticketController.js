@@ -44,7 +44,7 @@ const payForTrip = async (req, res) => {
         }
     }
     catch (err) {
-        res.status(500).json({msg: 'Unable to Pay Trip', error: err});
+        res.status(500).json({message: 'Unable to Pay Trip', error: err});
     }
 }
 

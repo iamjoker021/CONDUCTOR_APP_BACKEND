@@ -10,7 +10,7 @@ const addUser = async (req, res) => {
         const password_hash = await bcrypt.hash(password, PASS_SALT);
         await busStopModel.addUser(name, email, password_hash, phoneno, role);
         res.json({
-            msg: 'Sucessfully added user'
+            message: 'Sucessfully added user'
         });
     }
     catch (error) {
@@ -42,7 +42,7 @@ const validateUser = async (req, res) => {
         res.json({ token, username: user.email });
     }
     else {
-        res.status(401).json({ error: 'Password is incorrect', msg: 'Authentication failed' });
+        res.status(401).json({ error: 'Password is incorrect', message: 'Authentication failed' });
     }
 }
 
