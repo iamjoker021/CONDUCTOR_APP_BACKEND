@@ -57,9 +57,17 @@ const getStopsFromBusId = async (req, res) => {
     try {
         const busId = req.params.bus_id;
         const busStopsDetails = await busStopModel.getStopsFromBusId(busId);
-        res.json({
-            busStopsDetails
-        })
+        if (busStopsDetails.length > 0) {
+            return res.json({
+                busStopsDetails
+            })
+        }
+        else {
+            return res.status(400).json({
+                error: 'No details found for given BusID, are you sure given busId is correct',
+                message: 'Unable to fetch bust stop details'
+            })
+        }
     } 
     catch (err) {
         res.status(500).json({message: err, error: 'Unable to receive Bus Stop info'});
