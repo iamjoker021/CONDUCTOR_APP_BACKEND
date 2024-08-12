@@ -14,7 +14,6 @@ const addUser = async (req, res) => {
         });
     }
     catch (error) {
-        console.log(error);
         if (error.message.includes('UNIQUE constraint failed: users.phoneno')) {
             return res.status(400).json({error: 'Given phoneno already exists', message: 'Unable to register user'});
         }
@@ -28,7 +27,6 @@ const addUser = async (req, res) => {
 const validateUser = async (req, res) => {
     const { email, password } = req.body;
     const userList = await busStopModel.getUserDetailsByUsername(email);
-    console.log(userList)
     if (userList.length !== 1) {
         return res.status(401).json({ error: 'Either username is invalid/User is not registered yet', message: 'Authentication failed' });
     }
