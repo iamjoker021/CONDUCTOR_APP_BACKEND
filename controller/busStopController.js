@@ -8,7 +8,7 @@ const getAllCity = async (req, res) => {
         })
     }
     catch (err) {
-        res.status(500).json({msg: 'Unable to receive City List', error: err});
+        res.status(500).json({error: 'Unable to receive City List', message: 'Not able to retrieve the info'});
     }
 }
 
@@ -21,7 +21,7 @@ const getAllStopsForCity = async (req, res) => {
         })
     }
     catch (err) {
-        res.status(500).json({msg: 'Unable to receive Source Stop List', error: err});
+        res.status(500).json({error: 'Unable to receive Source Stop List', message: err});
     }
 }
 
@@ -34,7 +34,7 @@ const getAllPossibleDestinationFromSource = async (req, res) => {
         })
     }
     catch (err) {
-        res.status(500).json({msg: 'Unable to receive Destination Stop List', error: err});
+        res.status(500).json({message: err, error: 'Unable to receive Destination Stop List'});
     }
     
 }
@@ -49,7 +49,7 @@ const getBustListForChoosenPath = async (req, res) => {
         })
     }
     catch (err) {
-        res.status(500).json({msg: 'Unable to receive Bus List', error: err});
+        res.status(500).json({message: err, error: 'Unable to receive Bus List'});
     }
 }
 
@@ -62,7 +62,7 @@ const getStopsFromBusId = async (req, res) => {
         })
     } 
     catch (err) {
-        res.status(500).json({msg: 'Unable to receive Bus Stop info', error: err});
+        res.status(500).json({message: err, error: 'Unable to receive Bus Stop info'});
     }
 }
 

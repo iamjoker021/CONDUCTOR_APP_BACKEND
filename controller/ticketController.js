@@ -11,7 +11,7 @@ const getTicketDetailsForUser = async (req, res) => {
         })
     }
     catch (err) {
-        res.status(500).json({msg: 'Unable to fetch ticket details', error: err});
+        res.status(500).json({message: err, error: 'Unable to fetch ticket details'});
     }
 }
 
@@ -40,7 +40,7 @@ const payForTrip = async (req, res) => {
             })
         }
         else {
-            res.status(404).json({ msg: 'Invalid Trip Details, not able to generate ticket', error: 'Exprected exactly entry for BusID, sourceId, destinationId' })
+            res.status(404).json({ message: 'Invalid Trip Details, not able to generate ticket', error: 'Expected exactly one entry for BusID, sourceId, destinationId' })
         }
     }
     catch (err) {
