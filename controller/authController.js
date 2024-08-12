@@ -5,10 +5,6 @@ const jwt = require('jsonwebtoken');
 
 const addUser = async (req, res) => {
     const { name, email, password, phoneno, role } = req.body;
-    const userList = await busStopModel.getUserDetailsByUsername(email);
-    if (userList.length !== 0) {
-        return res.status(400).json({message: 'Unable to register user', error: 'Given Username/Email already exits'});
-    }
     try {
         const PASS_SALT = parseInt(process.env.PASS_SALT) || 10;
         const password_hash = await bcrypt.hash(password, PASS_SALT);
@@ -17,8 +13,15 @@ const addUser = async (req, res) => {
             msg: 'Sucessfully added user'
         });
     }
-    catch (err) {
-        res.status(500).json({message: err, error: 'Unable to register user'});
+    catch (error) {
+        console.log(error);
+        if (error.message.includes('UNIQUE constraint failed: users.phoneno')) {
+            return res.status(400).json({error: 'Given phoneno already exists', message: 'Unable to register user'});
+        }
+        else if (error.message.includes('UNIQUE constraint failed: users.email')) {
+            return res.status(400).json({error: 'Given EmailID already exists', message: 'Unable to register user'});
+        }
+        res.status(500).json({message: error.message, error: 'Unable to register user'});
     }
 }
 
