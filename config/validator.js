@@ -17,7 +17,7 @@ const registerValidation = [
         .notEmpty()
         .withMessage('Email/Username should not be empty')
         .isEmail()
-        .withMessage('Should be valid email Id'),
+        .withMessage('Email ID is not valid'),
     body('password')
         .trim()
         .notEmpty()
@@ -103,10 +103,16 @@ const payForTripValidation = [
 const validate = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({
-            'msg': 'Invalid Input, validation failed. Please check errors for more info',
-            errors
-        });
+        const response = {
+            'error': errors.errors.map(error => error.msg).join(', \n'),
+            'message': errors.errors.map(error => {
+                const obj = {};
+                obj[error['path']] = error['msg'];
+                obj['value'] = error['value'];
+                return obj;
+            })
+        }
+        return res.status(422).json(response);
     }
     next();
 }
