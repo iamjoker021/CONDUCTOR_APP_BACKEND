@@ -129,10 +129,11 @@ const runQuery = async (db, query, params=[]) => {
             if (err) {
                 return reject(err);
             }
+            /*
             rows.forEach(stop => {
                 stop['trip_details'] = JSON.parse(stop['trip_details']);
             });
-            console.log(rows)
+            */
             resolve(rows);
         });
     });
@@ -141,5 +142,5 @@ const runQuery = async (db, query, params=[]) => {
 const query = `
 select * from tickets;
 `
-// runQuery(db, query).then(data => console.log('this is data',data));
-intializeData(db);
+runQuery(db, query).then(data => console.log('this is data',data));
+// intializeData(db);
