@@ -13,7 +13,7 @@ const getTicketDetailsForUser = async (userId, isValid) => {
         getTicketQ =  `
         SELECT * FROM tickets 
         WHERE user_id = ?
-        ORDER BY issue_time ASC;
+        ORDER BY issue_time DESC;
         `;
     }
     return new Promise((resolve, reject) => {
