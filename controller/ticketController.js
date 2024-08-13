@@ -4,7 +4,7 @@ const ticketModel = require("../model/ticketModel");
 const getTicketDetailsForUser = async (req, res) => {
     try {
         const userId = req.userId;
-        const isValid = req.query.isvalid === 1;
+        const isValid = parseInt(req.query.isvalid) === 1;
         const ticketList = await ticketModel.getTicketDetailsForUser(userId, isValid);
         res.status(200).json({
             ticketList
