@@ -35,7 +35,7 @@ const payForTrip = async (req, res) => {
             }
             await ticketModel.createTicketForUser(userId, tripDetails);
             res.json({
-                'msg': 'Ticket placed',
+                message: 'Ticket placed',
                 tripDetails
             })
         }
