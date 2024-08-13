@@ -1,4 +1,8 @@
 {
+  "name": "conductor-app-backend",
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
