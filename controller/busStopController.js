@@ -5,7 +5,7 @@ const getStopsFromBusId = async (req, res) => {
         const busId = req.params.bus_id;
         const busStopsDetails = await busStopModel.getStopsFromBusId(busId);
         if (busStopsDetails.length > 0) {
-            return res.json({
+            return res.status(200).json({
                 busStopsDetails
             })
         }
