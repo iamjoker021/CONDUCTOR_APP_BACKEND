@@ -1,11 +1,18 @@
+require('dotenv').config();
 const busStopModel = require("../model/busStopModel");
 const ticketModel = require("../model/ticketModel");
+const QRCode = require('qrcode');
 
 const getTicketDetailsForUser = async (req, res) => {
     try {
         const userId = req.userId;
         const isValid = parseInt(req.query.isvalid) === 1;
         const ticketList = await ticketModel.getTicketDetailsForUser(userId, isValid);
+        for (let index = 0; index < ticketList.length; index++) {
+            const url = process.env.SERVER_URL + '/users/tickets/' + ticketList[index].ticket_unique_identifier;
+            const qrCode = await QRCode.toDataURL(url);
+            ticketList[index]['ticket_qr'] = qrCode;
+        }
         res.status(200).json({
             ticketList
         })
@@ -19,6 +26,11 @@ const getTicketDetailsById = async (req, res) => {
     try {
         const ticketId = req.params.ticketid;
         const ticketDetails = await ticketModel.getTicketDetailsById(ticketId);
+        for (let index = 0; index < ticketDetails.length; index++) {
+            const url = process.env.SERVER_URL + '/users/tickets/' + ticketDetails[index].ticket_unique_identifier;
+            const qrCode = await QRCode.toDataURL(url);
+            ticketDetails[index]['ticket_qr'] = qrCode;
+        }
         if (ticketDetails.length > 0) {
             return res.status(200).json({
                 ticketDetails
@@ -32,6 +44,7 @@ const getTicketDetailsById = async (req, res) => {
         }
     }
     catch (error) {
+        throw error;
         res.status(500).json({message: error, error: 'Unable to fetch ticket details'});
     }
 }
