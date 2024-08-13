@@ -6,7 +6,7 @@ const getTicketDetailsForUser = async (req, res) => {
         const userId = req.userId;
         const isValid = req.query.isvalid === 1;
         const ticketList = await ticketModel.getTicketDetailsForUser(userId, isValid);
-        res.json({
+        res.status(200).json({
             ticketList
         })
     }
@@ -34,13 +34,13 @@ const payForTrip = async (req, res) => {
                 fare: totalFare
             }
             await ticketModel.createTicketForUser(userId, tripDetails);
-            res.json({
+            res.status(200).json({
                 message: 'Ticket placed',
                 tripDetails
             })
         }
         else {
-            res.status(404).json({ message: 'Invalid Trip Details, not able to generate ticket', error: 'Expected exactly one entry for BusID, sourceId, destinationId' })
+            res.status(500).json({ message: 'Invalid Trip Details, not able to generate ticket', error: 'Expected exactly one entry for BusID, sourceId, destinationId' })
         }
     }
     catch (err) {
