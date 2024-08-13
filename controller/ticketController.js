@@ -15,6 +15,27 @@ const getTicketDetailsForUser = async (req, res) => {
     }
 }
 
+const getTicketDetailsById = async (req, res) => {
+    try {
+        const ticketId = req.params.ticketid;
+        const ticketDetails = await ticketModel.getTicketDetailsById(ticketId);
+        if (ticketDetails.length > 0) {
+            return res.status(200).json({
+                ticketDetails
+            })
+        }
+        else {
+            return res.status(400).json({
+                error: 'Ticket not found', 
+                message: 'Ticket not found, Are you sure ticket ID is correct'
+            })
+        }
+    }
+    catch (error) {
+        res.status(500).json({message: error, error: 'Unable to fetch ticket details'});
+    }
+}
+
 const payForTrip = async (req, res) => {
     try {
         const userId = req.userId;
@@ -50,5 +71,6 @@ const payForTrip = async (req, res) => {
 
 module.exports = {
     getTicketDetailsForUser,
+    getTicketDetailsById,
     payForTrip
 }

@@ -169,3 +169,65 @@ paths:
                   error:
                     type: string
                     example: Internal Server Error
+
+  /user/tickets/{ticketid}:
+    get:
+      summary: Retrieve ticket details by ID
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      description: Fetches details for a specific ticket using its unique identifier.
+      parameters:
+        - name: ticketid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the ticket to retrieve.
+      responses:
+        '200':
+          description: Successfully retrieved ticket details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ticketDetails:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        ticket_unique_identifier:
+                          type: string
+                          example: "ABC123"
+                        # Add other ticket fields here
+        '400':
+          description: Ticket not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Ticket not found
+                  message:
+                    type: string
+                    example: Ticket not found, Are you sure ticket ID is correct
+        '500':
+          description: Unable to fetch ticket details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error details here"
+                  error:
+                    type: string
+                    example: Unable to fetch ticket details

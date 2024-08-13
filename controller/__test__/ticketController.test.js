@@ -58,3 +58,38 @@ describe('payForTrip', () => {
         });
     })
 })
+
+describe('getTicketDetailsById', () => {
+    it('should return 200 on giving corerect ticket id', async () => {
+        const mockResponse = [{
+            'ticket_unique_identifier': 'mockticketid',
+            'issue_time': 'mock issue time',
+            'expiry_time': 'mock expiry time',
+            'trip_details': { "bus_id": 0, "source_stop_id": 0, "destination_stop_id": 0, "total_distance": 0, "price_per_km": 0, "no_of_passengers": 0, "fare": 0 },
+            'user_id': 1
+        }]
+        ticketModel.getTicketDetailsById.mockResolvedValue(mockResponse);
+
+        req = { params: {ticketId: 'mockticketid'} };
+        res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn()
+        }
+        await ticketController.getTicketDetailsById(req, res);
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ticketDetails: mockResponse});
+    })
+
+    it('should throw 400 error if ticket if is not present in the DB', async () => {
+        ticketModel.getTicketDetailsById.mockResolvedValue([]);
+
+        req = { params: {ticketId: 'mockticketid'} };
+        res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn()
+        }
+        await ticketController.getTicketDetailsById(req, res);
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({error: 'Ticket not found', message: 'Ticket not found, Are you sure ticket ID is correct'});
+    })
+})

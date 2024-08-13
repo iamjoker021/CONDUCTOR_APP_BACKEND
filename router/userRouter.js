@@ -5,6 +5,7 @@ const { validate, payForTripValidation } = require('../config/validator');
 const userRouter = Router();
 
 userRouter.get('/tickets', ticketController.getTicketDetailsForUser);
+userRouter.get('/tickets/:ticketid', ticketController.getTicketDetailsById);
 userRouter.post('/pay-for-trip', payForTripValidation, validate, ticketController.payForTrip);
 
 module.exports = userRouter;

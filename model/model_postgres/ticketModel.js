@@ -24,19 +24,28 @@ const getTicketDetailsForUser = async (userId, isValid) => {
     return rows;
 }
 
+const getTicketDetailsById = async (tikcetId) => {
+    const getTicketDetailsByIdQ = `
+    SELECT * FROM tickets
+    WHERE ticket_unique_identifier = $1
+    `
+    const { rows } = await pool.query(getTicketDetailsByIdQ, [tikcetId]);
+    return rows;
+}
+
 const createTicketForUser = async (userId, tripDetails) => {
     const createTicketForUserQ = `
-    INSERT INTO user_ticket.tickets (ticket_qr, issue_time, expiry_time, trip_details, user_id)
+    INSERT INTO user_ticket.tickets (issue_time, expiry_time, trip_details, user_id)
     VALUES ($1, $2, $3, $4, $5)
     `
-    const ticket_qr = 'fill QR here';
     const currentTime = new Date();
     const ticketExpireDuration = parseInt(process.env.TICKET_EXPIRY_DURATION || (1 * 60 * 60 * 1000));
     const expiryTime = new Date(currentTime.getTime() + ticketExpireDuration);
-    await pool.query(createTicketForUserQ, [ticket_qr, currentTime, expiryTime, tripDetails, userId]);
+    await pool.query(createTicketForUserQ, [currentTime, expiryTime, tripDetails, userId]);
 }
 
 module.exports = {
     getTicketDetailsForUser,
+    getTicketDetailsById,
     createTicketForUser
 }
