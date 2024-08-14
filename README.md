@@ -42,10 +42,10 @@ Tasks done:
 4. On request to pay, add ticket details
 5. Integrate ticket verification and QR process in app
 6. Make it standard error sending and makeit production ready
+7. Host the webpage from your conputer to try and check
 
 Next Tasks:
 - Build Conductor side of application
 - Learn about PWA, and how to impletement the app usign PWA on mobile app
-- How to host the webpage from your conputer to try and check
 - How to enable payement transaction
 
