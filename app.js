@@ -6,6 +6,9 @@ const userRouter = require('./router/userRouter');
 const morgan = require('morgan');
 const cors = require('cors');
 
+// Intialize data if note exists
+require('./config/db_sqlite/intialize_data');
+
 const app = express();
 app.use(express.json());
 app.use(morgan('dev'));
