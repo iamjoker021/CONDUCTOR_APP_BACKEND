@@ -1,5 +1,6 @@
+require('dotenv').config();
 const sqlite3 = require("sqlite3").verbose();
-const filepath = "./conductor_app.db";
+const filepath = "./" + process.env.SQLITE_DB_PATH;
 
 function createDbConnection() {
   const db = new sqlite3.Database(filepath, (error) => {

@@ -49,8 +49,6 @@ const validateUser = async (req, res) => {
     catch (error) {
         res.status(500).json({ error: 'Unexpected Error', message: 'Internal error, Only one user should exists, but multiple user exists' });
     }
-    
-    
 }
 
 const verifyToken = (req, res, next) => {

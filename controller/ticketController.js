@@ -44,7 +44,6 @@ const getTicketDetailsById = async (req, res) => {
         }
     }
     catch (error) {
-        throw error;
         res.status(500).json({message: error, error: 'Unable to fetch ticket details'});
     }
 }
