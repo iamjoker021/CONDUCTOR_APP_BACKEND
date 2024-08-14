@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require('node:path');
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
@@ -14,6 +15,9 @@ const options = {
         {
           url: "http://localhost:3000/api",
         },
+        {
+          url: process.env.HOST_SERVER_URL
+        }
       ],
     },
     apis: [path.join(__dirname, '../docs/*.yaml')],

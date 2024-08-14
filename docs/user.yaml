@@ -5,6 +5,7 @@ info:
   description: API documentation for user functionalities
 
 servers:
+  - url: ${HOST_SERVER_URL}
   - url: http://localhost:3000/api
 
 components:
