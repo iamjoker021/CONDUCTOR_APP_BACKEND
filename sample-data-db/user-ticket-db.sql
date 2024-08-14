@@ -9,7 +9,6 @@ CREATE TABLE users (
 
 CREATE TABLE tickets (
     ticket_unique_identifier UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    ticket_qr TEXT NOT NULL,
     issue_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expiry_time TIMESTAMP NOT NULL,
     trip_details JSONB NOT NULL, -- Structure: {"bus_id": ..., "source_stop_id": ..., "destination_stop_id": ..., "total_distance": ..., "price_per_km": ..., "no_of_passengers": ..., "fare": ...}

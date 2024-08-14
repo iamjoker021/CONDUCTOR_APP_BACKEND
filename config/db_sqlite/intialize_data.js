@@ -14,7 +14,6 @@ function intializeData(db) {
 
 CREATE TABLE tickets (
     ticket_unique_identifier CHAR(36) PRIMARY KEY ,
-    ticket_qr TEXT NOT NULL,
     issue_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expiry_time TIMESTAMP NOT NULL,
     trip_details JSONB NOT NULL, 
@@ -142,5 +141,5 @@ const runQuery = async (db, query, params=[]) => {
 const query = `
 select * from tickets;
 `
-runQuery(db, query).then(data => console.log('this is data',data));
-// intializeData(db);
+// runQuery(db, query).then(data => console.log('this is data',data));
+intializeData(db);
