@@ -9,7 +9,7 @@ const getTicketDetailsForUser = async (req, res) => {
         const isValid = parseInt(req.query.isvalid) === 1;
         const ticketList = await ticketModel.getTicketDetailsForUser(userId, isValid);
         for (let index = 0; index < ticketList.length; index++) {
-            const url = process.env.SERVER_URL + '/users/tickets/' + ticketList[index].ticket_unique_identifier;
+            const url = process.env.SERVER_URL + '/api/users/tickets/' + ticketList[index].ticket_unique_identifier;
             const qrCode = await QRCode.toDataURL(url);
             ticketList[index]['ticket_qr'] = qrCode;
         }
