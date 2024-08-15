@@ -35,9 +35,12 @@ There are two part to this App
 2. Conductor should be able to view no of tickets taken on online via the App on that particular trip
 
 #### How to validate the ticket?
-1. The ticket should be present in our DB and should be in active state
-2. The ticket should match the Source-Destination-Names should be valid.
-3. If the ticket is scanned or vierfied once by Conductor then the status changes to Invalid
+- First Conductor should be able to scan the QR ticket and validate if the ticket is valid
+  - What does Valid QR means?
+    1. The ticket should exist in DB and not expired (to check if such ticket exist)
+    2. The ticket should not be validated by conductor earlier (to prevent users sharing the same ticket to travel)
+    3. The ticket should belong to the same Bus, the conductor is allocated to
+    4. Only Conductor should be able to validate a ticket, mark the ticket as validated
 
 Tasks done:
 1. Create BusStop API for user to serach bus and get fare for their trip
