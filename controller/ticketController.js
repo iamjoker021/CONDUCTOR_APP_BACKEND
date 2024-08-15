@@ -31,6 +31,7 @@ const validateTicketByID = async (req, res) => {
         const ticketDetails = await ticketModel.getTicketDetailsByID(ticketId);
         if (ticketDetails.length === 1) {
             if (ticketDetails[0].validated_time === null) {
+                console.log(ticketId, ticketDetails, 1)
                 await ticketModel.validateTicketByID(ticketId);
                 return res.status(200).json({message: 'Ticket is marked as validated'})
             }

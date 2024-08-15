@@ -38,7 +38,7 @@ const getTicketDetailsByID = (ticketId) => {
             if (err) {
                 return reject(err);
             }
-            resolve({ rows });
+            resolve(rows);
         });
     });
 }
@@ -49,7 +49,14 @@ const validateTicketByID = async (ticketId) => {
     WHERE ticket_unique_identifier = ?
     AND validated_time IS NULL;
     `
-    db.exec(validateTicketByIDQ, [ticketId]);
+    return new Promise((resolve, reject) => {
+        db.run(validateTicketByIDQ, [ticketId], function(err) {
+            if (err) {
+                return reject(err);
+            }
+            resolve({ message: 'Update does not throw any errro' });
+        });
+    });
 }
 
 const createTicketForUser = async (userId, tripDetails) => {
