@@ -39,7 +39,7 @@ const validateUser = async (req, res) => {
         if (isPasswordCorrect) {
             const AUTH_SECRET = process.env.AUTH_SECRET;
             const tokenExpireDuration = parseInt(process.env.TOKEN_EXPIRY_DURATION || (5 * 60))
-            const token = await jwt.sign({ userId: user.id }, AUTH_SECRET, { expiresIn: tokenExpireDuration, });
+            const token = await jwt.sign({ userId: user.id, role: user.role }, AUTH_SECRET, { expiresIn: tokenExpireDuration, });
             res.status(200).json({ token: token, username: user.email });
         }
         else {
@@ -61,6 +61,7 @@ const verifyToken = (req, res, next) => {
         const token = bearerToken.split(' ')[1];
         const decoded = jwt.verify(token, AUTH_SECRET);
         req.userId = decoded.userId;
+        req.user_role = decoded.role;
         next();
     } 
     catch (error) {

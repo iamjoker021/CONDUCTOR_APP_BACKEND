@@ -29,22 +29,27 @@ const getTicketDetailsForUser = async (userId, isValid) => {
     });
 };
 
-const getTicketDetailsById = async (tikcetId) => {
-    const getTicketDetailsByIdQ = `
-    SELECT * FROM tickets
-    WHERE ticket_unique_identifier = ?
+const getTicketDetailsByID = (ticketId) => {
+    const getTicketDetailsByIDQ = `
+    SELECT * FROM tickets WHERE ticket_unique_identifier = ?
     `
     return new Promise((resolve, reject) => {
-        db.all(getTicketDetailsByIdQ, [tikcetId], (err, rows) => {
+        db.all(getTicketDetailsByIDQ, [ticketId], (err, rows) => {
             if (err) {
                 return reject(err);
             }
-            rows.forEach(stop => {
-                stop['trip_details'] = JSON.parse(stop['trip_details']);
-            });
-            resolve(rows);
+            resolve({ rows });
         });
     });
+}
+
+const validateTicketByID = async (ticketId) => {
+    const validateTicketByIDQ = `
+    UPDATE tickets SET validated_time = current_timestamp
+    WHERE ticket_unique_identifier = ?
+    AND validated_time IS NULL;
+    `
+    db.exec(validateTicketByIDQ, [ticketId]);
 }
 
 const createTicketForUser = async (userId, tripDetails) => {
@@ -68,6 +73,7 @@ const createTicketForUser = async (userId, tripDetails) => {
 
 module.exports = {
     getTicketDetailsForUser,
-    getTicketDetailsById,
+    getTicketDetailsByID,
+    validateTicketByID,
     createTicketForUser
 };

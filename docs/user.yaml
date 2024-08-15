@@ -173,41 +173,32 @@ paths:
 
   /user/tickets/{ticketid}:
     get:
-      summary: Retrieve ticket details by ID
+      summary: Validate Ticket by ID
+      description: Validates a bus ticket using its unique identifier. Only users with the role 'conductor' are allowed to validate tickets.
       tags:
-        - User
+        - Conductor
       security:
         - bearerAuth: []
-      description: Fetches details for a specific ticket using its unique identifier.
       parameters:
-        - name: ticketid
-          in: path
+        - in: path
+          name: ticketid
           required: true
+          description: The unique identifier of the ticket to be validated.
           schema:
             type: string
-          description: The unique identifier of the ticket to retrieve.
       responses:
         '200':
-          description: Successfully retrieved ticket details
+          description: Ticket successfully validated.
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  ticketDetails:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          example: 1
-                        ticket_unique_identifier:
-                          type: string
-                          example: "ABC123"
-                        # Add other ticket fields here
+                  message:
+                    type: string
+                    example: Ticket is marked as validated
         '400':
-          description: Ticket not found
+          description: Ticket not found or invalid ticket ID.
           content:
             application/json:
               schema:
@@ -215,20 +206,33 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: Ticket not found
+                    example: Ticket is not found
                   message:
                     type: string
-                    example: Ticket not found, Are you sure ticket ID is correct
-        '500':
-          description: Unable to fetch ticket details
+                    example: The ticket ID is not present in DB, are you sure the Ticket ID is correct. The ticket ID is case-sensitive, make sure the case and spelling is correct.
+        '401':
+          description: Unauthorized access. Only conductors can validate tickets.
           content:
             application/json:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: string
+                    example: Only Conductor can validate a ticket
                   message:
                     type: string
-                    example: "Error details here"
+                    example: The given token/user is not valid to validate the ticket.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
                   error:
                     type: string
                     example: Unable to fetch ticket details
+                  message:
+                    type: string
+                    example: Error details
