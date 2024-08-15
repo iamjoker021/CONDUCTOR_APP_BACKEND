@@ -37,6 +37,7 @@ async function intializeData(db) {
     issue_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
     expiry_time TIMESTAMP NOT NULL, 
     trip_details JSONB NOT NULL, 
+    validated_time TIMESTAMP,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
     );
     CREATE TABLE cities (
