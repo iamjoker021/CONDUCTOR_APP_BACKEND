@@ -32,7 +32,7 @@ const validateTicketByID = async (req, res) => {
             else {
                 return res.status(400).json({
                     error: 'The ticket is already validated',
-                    message: `Ticket is already validates on ${ticketDetails.validated_time}`
+                    message: `Ticket is already validates on ${ticketDetails[0].validated_time}`
                 })
             }
         }
