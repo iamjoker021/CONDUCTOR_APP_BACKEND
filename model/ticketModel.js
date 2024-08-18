@@ -38,6 +38,9 @@ const getTicketDetailsByID = (ticketId) => {
             if (err) {
                 return reject(err);
             }
+            rows.forEach(stop => {
+                stop['trip_details'] = JSON.parse(stop['trip_details']);
+            });
             resolve(rows);
         });
     });

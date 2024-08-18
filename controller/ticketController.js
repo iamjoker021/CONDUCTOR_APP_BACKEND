@@ -25,14 +25,14 @@ const validateTicketByID = async (req, res) => {
         const ticketDetails = await ticketModel.getTicketDetailsByID(ticketId);
         if (ticketDetails.length === 1) {
             if (ticketDetails[0].validated_time === null) {
-                console.log(ticketId, ticketDetails, 1)
                 await ticketModel.validateTicketByID(ticketId);
-                return res.status(200).json({message: 'Ticket is marked as validated'})
+                return res.status(200).json({message: 'Ticket is marked as validated', ticketDetails: ticketDetails[0]})
             }
             else {
                 return res.status(400).json({
                     error: 'The ticket is already validated',
-                    message: `Ticket is already validates on ${ticketDetails[0].validated_time}`
+                    message: `Ticket is already validates on ${ticketDetails[0].validated_time}`,
+                    ticketDetails: ticketDetails[0]
                 })
             }
         }
