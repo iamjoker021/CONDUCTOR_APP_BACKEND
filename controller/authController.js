@@ -40,7 +40,7 @@ const validateUser = async (req, res) => {
             const AUTH_SECRET = process.env.AUTH_SECRET;
             const tokenExpireDuration = parseInt(process.env.TOKEN_EXPIRY_DURATION || (5 * 60))
             const token = await jwt.sign({ userId: user.id, role: user.role }, AUTH_SECRET, { expiresIn: tokenExpireDuration, });
-            res.status(200).json({ token: token, username: user.email });
+            res.status(200).json({ token: token, username: user.email, role: user.role });
         }
         else {
             res.status(401).json({ error: 'Password is incorrect', message: 'Authentication failed' });
