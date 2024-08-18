@@ -172,7 +172,7 @@ paths:
                     example: Internal Server Error
 
   /user/tickets/{ticketid}:
-    get:
+    post:
       summary: Validate Ticket by ID
       description: Validates a bus ticket using its unique identifier. Only users with the role 'conductor' are allowed to validate tickets.
       tags:
