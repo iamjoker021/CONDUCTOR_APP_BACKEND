@@ -68,7 +68,7 @@ describe('validateUser', () => {
         await authController.validateUser(req, res);
 
         expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({ token: 'mocktoken', username: 'john.doe@example.com' });
+        expect(res.json).toHaveBeenCalledWith({ token: 'mocktoken', username: 'john.doe@example.com', role: 'passenger' });
     })
 
     test('should return 401 if password is not valid', async () => {
