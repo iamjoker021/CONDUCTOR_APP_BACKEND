@@ -1,17 +1,14 @@
 const ticketController = require("../ticketController");
 const ticketModel = require("../../model/ticketModel");
 const busStopModel = require("../../model/busStopModel");
-const QRCode = require('qrcode');
 
 jest.mock('../../model/ticketModel');
 jest.mock('../../model/busStopModel');
-jest.mock('qrcode');
 
 describe('getTicketDetailsForUser', () => {
     it('should return 200 on giving correct userId', async () => {
         const mockResponse =  [ { "ticket_id": 0, "ticket_unique_identifier": "string", "issue_time": "2024-08-13T07:38:21.728Z", "expiry_time": "2024-08-13T07:38:21.728Z", "trip_details": {"bus_id": 0,"source_stop_id": 0,"destination_stop_id": 0,"total_distance": 0,"price_per_km": 0,"no_of_passengers": 0,"fare": 0}, "is_valid": true, "user_id": 0 } ];
         ticketModel.getTicketDetailsForUser.mockResolvedValue(mockResponse);
-        QRCode.toDataURL.mockResolvedValue('QR_CODE_IMAGE');
 
         const req = { userId: 1, query: {} };
         const res = {
@@ -20,7 +17,6 @@ describe('getTicketDetailsForUser', () => {
         };
         await ticketController.getTicketDetailsForUser(req, res);
         expect(res.status).toHaveBeenCalledWith(200);
-        mockResponse[0]['ticket_qr'] = 'QR_CODE_IMAGE';
         expect(res.json).toHaveBeenCalledWith({'ticketList': mockResponse});
     });
 })
@@ -83,7 +79,7 @@ describe('validateTicketByID', () => {
         }
         await ticketController.validateTicketByID(req, res);
         expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({message: 'Ticket is marked as validated'});
+        expect(res.json).toHaveBeenCalledWith({message: 'Ticket is marked as validated', ticketDetails: mockResponse[0]});
     })
 
     it('should throw 400 error if ticket if is not present in the DB', async () => {
@@ -118,7 +114,7 @@ describe('validateTicketByID', () => {
         }
         await ticketController.validateTicketByID(req, res);
         expect(res.status).toHaveBeenCalledWith(400);
-        expect(res.json).toHaveBeenCalledWith({error: 'The ticket is already validated',message: `Ticket is already validates on ${mockResponse.validated_time}`});
+        expect(res.json).toHaveBeenCalledWith({error: 'The ticket is already validated',message: `Ticket is already validates on ${mockResponse[0].validated_time}`, ticketDetails: mockResponse[0]});
     })
 
     it('should throw 401 error if user is not conductor', async () => {
