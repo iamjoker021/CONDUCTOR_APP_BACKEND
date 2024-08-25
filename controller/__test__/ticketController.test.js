@@ -1,9 +1,11 @@
 const ticketController = require("../ticketController");
 const ticketModel = require("../../model/ticketModel");
 const busStopModel = require("../../model/busStopModel");
+const paymentUtil = require('../../config/payment');
 
 jest.mock('../../model/ticketModel');
 jest.mock('../../model/busStopModel');
+jest.mock('../../config/payment');
 
 describe('getTicketDetailsForUser', () => {
     it('should return 200 on giving correct userId', async () => {
@@ -22,9 +24,11 @@ describe('getTicketDetailsForUser', () => {
 })
 
 describe('payForTrip', () => {
-    it('should return 200 for valid source, destination, busId', async () => {
+    it('should return 200 for valid source, destination, busId and payment confirmed', async () => {
         busStopModel.validateTripDetails.mockResolvedValue([{'bus_id': 1, 'price_per_km': 2, 'total_distance': 3, 'fare': 6}]);
-        ticketModel.createTicketForUser = jest.fn();
+        ticketModel.createTicketForUser = jest.fn().mockResolvedValue({ticketId: 'UNIQUE_TIKCET_ID'});
+        paymentUtil.createOrderPayment.mockResolvedValue({orderId: 'UNIQUE_ORDER_ID', receipt: 'UNIQUE_TIKCET_ID'});
+        ticketModel.updateTicketOrderId = jest.fn();
 
         const req = { userId: 1, body: {sourceId: 1, destinationId: 2, busId: 1, noOfPassengers: 4} };
         const res = {
@@ -33,8 +37,9 @@ describe('payForTrip', () => {
         };
         await ticketController.payForTrip(req, res);
         expect(ticketModel.createTicketForUser).toHaveBeenCalled();
+        expect(ticketModel.updateTicketOrderId).toHaveBeenCalled();
         expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({message: 'Ticket placed', tripDetails: { 'bus_id': 1, 'source_stop_id': 1, 'destination_stop_id': 2, 'total_distance': 3, 'price_per_km': 2, 'no_of_passengers': 4, 'fare': 24 }});
+        expect(res.json).toHaveBeenCalledWith({message: 'Ticket placed', ticketId: 'UNIQUE_TIKCET_ID', orderId: 'UNIQUE_ORDER_ID',tripDetails: { 'bus_id': 1, 'source_stop_id': 1, 'destination_stop_id': 2, 'total_distance': 3, 'price_per_km': 2, 'no_of_passengers': 4, 'fare': 24 }});
     });
 
     it('should return 500, if mutiple fareInfo received, ', async () => {
@@ -57,6 +62,25 @@ describe('payForTrip', () => {
             error: 'Expected exactly one entry for BusID, sourceId, destinationId'
         });
     })
+
+    it('should return 400 for payment failed', async () => {
+        const error = {"code": "BAD_REQUEST_ERROR", "step": "payment_initiation", "description": "The amount must be atleast INR 1.00",};
+        busStopModel.validateTripDetails.mockResolvedValue([{'bus_id': 1, 'price_per_km': 2, 'total_distance': 3, 'fare': 6}]);
+        ticketModel.createTicketForUser = jest.fn().mockResolvedValue({ticketId: 'UNIQUE_TIKCET_ID'});
+        paymentUtil.createOrderPayment.mockResolvedValue({error: error});
+        ticketModel.updateTicketPaymentStatus = jest.fn();
+
+        const req = { userId: 1, body: {sourceId: 1, destinationId: 2, busId: 1, noOfPassengers: 4} };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn()
+        };
+        await ticketController.payForTrip(req, res);
+        expect(ticketModel.createTicketForUser).toHaveBeenCalled();
+        expect(ticketModel.updateTicketPaymentStatus).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({message: 'Unable to make payment, Please try again', error: error});
+    });
 })
 
 describe('validateTicketByID', () => {
@@ -127,4 +151,30 @@ describe('validateTicketByID', () => {
         expect(res.status).toHaveBeenCalledWith(401);
         expect(res.json).toHaveBeenCalledWith({error: 'Only Conductor can validate a ticket', message: 'The given token/user is not valid to validate the ticket'});
     })
+})
+
+describe('paymentVerification', () => {
+    it('should return 201 if payment is success', async () => {
+        paymentUtil.validatePaymentSignature.mockResolvedValue(true);
+        req = { params: {ticketId: 'UNIQUE_TIKCET_ID'},body: {razorpay_order_id: 'UNIQUE_ORDER_ID', razorpay_payment_id: 'UNIQUE_PAY_ID', razorpay_signature: 'SIGN'} };
+        res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn()
+        }
+        await ticketController.paymentVerification(req, res);
+        expect(res.status).toHaveBeenCalledWith(201);
+        expect(res.json).toHaveBeenCalledWith({message: 'Payment is successfull', orderId: 'UNIQUE_ORDER_ID'});
+    });
+
+    it('should return 401 if payment is failure/signature not valid', async () => {
+        paymentUtil.validatePaymentSignature.mockResolvedValue(false);
+        req = { params: {ticketId: 'UNIQUE_TIKCET_ID'},body: {razorpay_order_id: 'UNIQUE_ORDER_ID', razorpay_payment_id: 'UNIQUE_PAY_ID', razorpay_signature: 'SIGN'} };
+        res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn()
+        }
+        await ticketController.paymentVerification(req, res);
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.json).toHaveBeenCalledWith({error: 'Payment failed, payment signature is not valid', message: 'Payment is failed, payment signature is not valid'});
+    });
 })

@@ -1,6 +1,7 @@
 require('dotenv').config();
 const busStopModel = require("../model/busStopModel");
 const ticketModel = require("../model/ticketModel");
+const paymentUtil= require('../config/payment');
 
 const getTicketDetailsForUser = async (req, res) => {
     try {
@@ -66,9 +67,20 @@ const payForTrip = async (req, res) => {
                 no_of_passengers: noOfPassengers,
                 fare: totalFare
             }
-            await ticketModel.createTicketForUser(userId, tripDetails);
+            const { ticketId } = await ticketModel.createTicketForUser(userId, tripDetails);
+            const paymentResponse = await paymentUtil.createOrderPayment(totalFare*100, ticketId);
+            if (paymentResponse.error) {
+                ticketModel.updateTicketPaymentStatus(ticketId, 'FAILED');
+                return res.status(400).json({
+                    message: 'Unable to make payment, Please try again', 
+                    error: paymentResponse.error
+                })
+            }
+            await ticketModel.updateTicketOrderId(ticketId, paymentResponse.orderId);
             res.status(200).json({
                 message: 'Ticket placed',
+                ticketId: paymentResponse.receipt,
+                orderId: paymentResponse.orderId,
                 tripDetails
             })
         }
@@ -81,8 +93,35 @@ const payForTrip = async (req, res) => {
     }
 }
 
+const paymentVerification = async (req, res) => {
+    try {
+        const ticketId = req.params.ticketid;
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+        const isValidSign = await paymentUtil.validatePaymentSignature(razorpay_order_id, razorpay_payment_id, razorpay_signature);
+        if (isValidSign) {
+            ticketModel.updateTicketPaymentStatus(ticketId, 'SUCCESS', razorpay_order_id);
+            return res.status(201).json({
+                message: 'Payment is successfull', 
+                orderId: razorpay_order_id
+            })
+        }
+        else {
+            ticketModel.updateTicketPaymentStatus(ticketId, 'FAILED');
+            return res.status(401).json({
+                error: 'Payment failed, payment signature is not valid', 
+                message: 'Payment is failed, payment signature is not valid'
+            })
+        }
+    }
+    catch (error) {
+        ticketModel.updateTicketPaymentStatus(ticketId, 'FAILED');
+        res.status(500).json({message: 'Unable to verify Payment', error: error});
+    }
+}
+
 module.exports = {
     getTicketDetailsForUser,
     validateTicketByID,
-    payForTrip
+    payForTrip,
+    paymentVerification
 }
