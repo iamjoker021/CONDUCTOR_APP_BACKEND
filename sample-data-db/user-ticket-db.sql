@@ -13,5 +13,7 @@ CREATE TABLE tickets (
     expiry_time TIMESTAMP NOT NULL,
     trip_details JSONB NOT NULL, -- Structure: {"bus_id": ..., "source_stop_id": ..., "destination_stop_id": ..., "total_distance": ..., "price_per_km": ..., "no_of_passengers": ..., "fare": ...}
     validated_time TIMESTAMP,
+    payment_status VARCHAR(255) NOT NULL DEFAULT 'IN-PROGRESS',
+    order_id VARCHAR(255),
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
 );

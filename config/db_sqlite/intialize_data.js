@@ -38,6 +38,8 @@ async function intializeData(db) {
     expiry_time TIMESTAMP NOT NULL, 
     trip_details JSONB NOT NULL, 
     validated_time TIMESTAMP,
+    payment_status VARCHAR(255) NOT NULL DEFAULT 'IN-PROGRESS',
+    order_id VARCHAR(255),
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
     );
     CREATE TABLE cities (
